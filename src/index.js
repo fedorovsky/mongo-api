@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import PostModel from './models/Post';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 mongoose.connect('mongodb://Fedorovskyi:ZXCvbnmzxc123@ds251223.mlab.com:51223/blog', { useNewUrlParser: true }).then(
   () => console.log('Connected DB'),
@@ -12,6 +13,7 @@ mongoose.connect('mongodb://Fedorovskyi:ZXCvbnmzxc123@ds251223.mlab.com:51223/bl
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -27,6 +29,6 @@ app.get('/posts', (req, res) => {
   })
 })
 
-app.listen(port, "0.0.0.0", function() {
+app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port 3000");
 });
