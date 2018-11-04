@@ -29,6 +29,36 @@ app.get('/posts', (req, res) => {
   })
 })
 
+/**
+ * POST
+ */
+app.post('/posts', (req, res) => {
+  const data = req.body;
+
+  const post = new PostModel({
+    title: data.title,
+    text: data.text,
+  })
+
+  post.save().then((item) => {
+    return res.json({ status: 'OK' })
+  })
+})
+
+/**
+ * DELETE
+ */
+app.delete('/posts/:id', (req, res) => {
+  PostModel.deleteOne({
+    _id: req.params.id
+  }, (err) => {
+    if (err) {
+      res.json({ status: 'error' });
+    }
+    res.json({ status: 'deleted' });
+  })
+});
+
 app.listen(port, "0.0.0.0", () => {
-  console.log("Listening on Port 3000");
+  console.log("Listening on Port 8080");
 });
