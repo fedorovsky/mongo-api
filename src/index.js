@@ -23,9 +23,9 @@ app.use(bodyParser.json());
 app.get('/posts', (req, res) => {
   PostModel.find().then((err, posts) => {
     if(err) {
-      res.send(err);
+      res.status(200).send(err);
     }
-    res.json(posts);
+    res.status(200).send(posts);
   })
 })
 
@@ -41,7 +41,7 @@ app.post('/posts', (req, res) => {
   })
 
   post.save().then((item) => {
-    return res.json({ status: 'OK' })
+    return res.status(200).send(item)
   })
 })
 
@@ -49,14 +49,12 @@ app.post('/posts', (req, res) => {
  * DELETE
  */
 app.delete('/posts/:id', (req, res) => {
-  PostModel.deleteOne({
-    _id: req.params.id
-  }, (err) => {
-    if (err) {
-      res.json({ status: 'error' });
+  PostModel.findOneAndDelete({ _id:  req.params.id}, (err, post) => {
+    if (post) {
+      return res.status(200).json({ message: 'Ok' })
     }
-    res.json({ status: 'deleted' });
-  })
+    return res.status(500).json({ message: 'Post not found' });
+  });
 });
 
 app.listen(port, "0.0.0.0", () => {
