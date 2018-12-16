@@ -27,14 +27,12 @@ app.use(bodyParser.json());
  * GET
  */
 app.get('/posts', (req, res) => {
-  PostModel.find()
-    .then((err, posts) => {
-      if (err) {
-        res.status(200).end(err);
-      }
-      res.status(200).end(posts);
-    })
-    .catch(() => console.log('error posts'));
+  PostModel.find({}, (err, posts) => {
+    if (err) {
+      res.status(200).send(err);
+    }
+    res.status(200).send(posts);
+  });
 });
 
 /**
