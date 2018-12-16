@@ -8,14 +8,17 @@
     "start": "nodemon src/index.js --exec babel-node"
   },
   "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.9"
+  },
+  "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.18.3",
-    "cors": "^2.8.4",
-    "express": "^4.16.4",
-    "mongoose": "^5.3.9",
+    "ip": "^1.1.5",
     "nodemon": "1.18.4",
     "prettier": "^1.14.3"
   }

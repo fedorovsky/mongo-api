@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
+import ip from 'ip';
 import bodyParser from 'body-parser';
 import PostModel from './models/Post';
 
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 mongoose
   .connect(
@@ -62,6 +63,7 @@ app.delete('/posts/:id', (req, res) => {
   });
 });
 
-app.listen(port, '0.0.0.0', () => {
-  console.log('Listening on Port 8080');
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server started...`);
+  console.log(`http://${ip.address()}:${PORT}`);
 });
