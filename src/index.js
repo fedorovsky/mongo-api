@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import express from 'express';
-import cors from 'cors';
-import ip from 'ip';
-import bodyParser from 'body-parser';
-import PostModel from './models/Post';
+const mongoose = require('mongoose');
+const express = require('express');
+const cors = require('cors');
+const ip = require('ip');
+const bodyParser = require('body-parser');
+const PostModel = require('./models/Post');
 
 const PORT = process.env.PORT || 3000;
 
