@@ -23,7 +23,7 @@ mongoose
 const app = express();
 
 app.use(cors());
-app.use(logger('dev'));
+app.use(logger(':method :url :status :response-time ms - :res[content-length]'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
