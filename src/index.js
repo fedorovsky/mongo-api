@@ -3,6 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const ip = require('ip');
 const bodyParser = require('body-parser');
+const colors =  require('colors');
+const logger = require('morgan');
+
 const PostModel = require('./models/Post');
 
 const PORT = process.env.PORT || 3000;
@@ -20,6 +23,7 @@ mongoose
 const app = express();
 
 app.use(cors());
+app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -38,7 +42,7 @@ app.get('/posts', (req, res) => {
 /**
  * POST
  */
-app.post('/posts', (req, res) => {
+app.post('/post', (req, res) => {
   const data = req.body;
 
   const post = new PostModel({
@@ -64,6 +68,7 @@ app.delete('/posts/:id', (req, res) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server started...`);
-  console.log(`http://${ip.address()}:${PORT}`);
+  console.log(
+    colors.green(`Server started : [http://${ip.address()}:${PORT}`),
+  )
 });
