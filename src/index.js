@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const bson = require('bson');
 const cors = require('cors');
 const ip = require('ip');
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ mongoose
   )
   .then(
     () => console.log('Connected DB'),
-    err => console.log('Error connected DB')
+    err => console.log('Error connected DB', err)
   );
 
 const app = express();
@@ -24,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 /**
- * GET
+ * GET ALL POSTS [GET]
  */
 app.get('/posts', (req, res) => {
   PostModel.find({}, (err, posts) => {
@@ -36,7 +37,7 @@ app.get('/posts', (req, res) => {
 });
 
 /**
- * POST
+ * NEW POST [POST]
  */
 app.post('/posts', (req, res) => {
   const data = req.body;
@@ -52,7 +53,7 @@ app.post('/posts', (req, res) => {
 });
 
 /**
- * DELETE
+ * DELETE POST [DELETE]
  */
 app.delete('/posts/:id', (req, res) => {
   PostModel.findOneAndDelete({ _id: req.params.id }, (err, post) => {
