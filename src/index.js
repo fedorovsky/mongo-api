@@ -8,6 +8,7 @@ const colors =  require('colors');
 const logger = require('morgan');
 
 const PostModel = require('./models/Post');
+const CommentModel = require('./models/Comment');
 
 const PORT = process.env.PORT || 3000;
 
@@ -65,6 +66,22 @@ app.delete('/posts/:id', (req, res) => {
       return res.status(200).json({ message: 'Ok' });
     }
     return res.status(500).json({ message: 'Post not found' });
+  });
+});
+
+/**
+ * NEW COMMENT [POST]
+ */
+app.post('/comment', (req, res) => {
+  const data = req.body;
+
+  const post = new CommentModel({
+    author: data.author,
+    text: data.text,
+  });
+
+  post.save().then(item => {
+    return res.status(200).send(item);
   });
 });
 
