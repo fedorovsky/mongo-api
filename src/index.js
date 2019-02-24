@@ -6,6 +6,7 @@ const ip = require('ip');
 const bodyParser = require('body-parser');
 const colors = require('colors');
 const logger = require('morgan');
+const routes = require('./routes');
 
 const PostModel = require('./models/Post');
 const User = require('./models/User');
@@ -30,6 +31,8 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use('/api', routes);
 
 /**
  * NEW USER [POST]
