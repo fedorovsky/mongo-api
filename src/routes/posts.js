@@ -1,16 +1,9 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const postController = require('../controllers/post');
 
-router
-  .route("/")
-  .get((req, res) => {
-    Post.find({}, (err, posts) => {
-        if (err) {
-          res.status(200).send(err);
-        }
-        res.status(200).send(posts);
-      });
-  });
+router.route('/').get(postController.getAll);
+router.route('/').post(postController.createPost);
+router.route('/:id').delete(postController.deletePost);
 
-  module.exports = router;
+module.exports = router;
