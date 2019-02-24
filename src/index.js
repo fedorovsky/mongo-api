@@ -4,19 +4,19 @@ const bson = require('bson');
 const cors = require('cors');
 const ip = require('ip');
 const bodyParser = require('body-parser');
-const colors =  require('colors');
+const colors = require('colors');
 const logger = require('morgan');
 
 const PostModel = require('./models/Post');
+const User = require('./models/User');
 const CommentModel = require('./models/Comment');
 
 const PORT = process.env.PORT || 3000;
 
 mongoose
-  .connect(
-    'mongodb://Fedorovskyi:ZXCvbnmzxc123@ds251223.mlab.com:51223/blog',
-    { useNewUrlParser: true }
-  )
+  .connect('mongodb://Fedorovskyi:ZXCvbnmzxc123@ds251223.mlab.com:51223/blog', {
+    useNewUrlParser: true,
+  })
   .then(
     () => console.log('Connected DB'),
     err => console.log('Error connected DB', err)
@@ -25,9 +25,27 @@ mongoose
 const app = express();
 
 app.use(cors());
-app.use(logger(':method :url :status :response-time ms - :res[content-length]'));
+app.use(
+  logger(':method :url :status :response-time ms - :res[content-length]')
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+/**
+ * NEW USER [POST]
+ */
+app.post('/user', (req, res) => {
+  const data = req.body;
+
+  const user = new User({
+    name: data.name,
+    email: data.email,
+  });
+
+  user.save().then(item => {
+    return res.status(200).send(item);
+  });
+});
 
 /**
  * GET ALL POSTS [GET]
@@ -48,12 +66,36 @@ app.post('/post', (req, res) => {
   const data = req.body;
 
   const post = new PostModel({
+    author: '5c725d1cee4fbc42d7fd981c',
     title: data.title,
     text: data.text,
   });
 
-  post.save().then(item => {
-    return res.status(200).send(item);
+  User.findById('5c725d1cee4fbc42d7fd981c').exec((err, user) => {
+    /**
+     * Save new post
+     */
+    post.save().then(post => {
+      res.status(200).send(post);
+    });
+    /**
+     * Add post to user posts
+     */
+    user.posts.push(post);
+    /**
+     * Save user
+     */
+    user.save(() => {
+      console.log('[USER SAVE WITH NEW POST]');
+      /**
+       * Get author's posts
+       */
+      User.findById('5c725d1cee4fbc42d7fd981c')
+        .populate('posts')
+        .exec((err, user) => {
+          console.log(user.posts);
+        });
+    });
   });
 });
 
@@ -75,18 +117,16 @@ app.delete('/posts/:id', (req, res) => {
 app.post('/comment', (req, res) => {
   const data = req.body;
 
-  const post = new CommentModel({
+  const comment = new CommentModel({
     author: data.author,
     text: data.text,
   });
 
-  post.save().then(item => {
+  comment.save().then(item => {
     return res.status(200).send(item);
   });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(
-    colors.green(`Server started : [http://${ip.address()}:${PORT}`),
-  )
+  console.log(colors.green(`Server started : [http://${ip.address()}:${PORT}`));
 });
