@@ -9,7 +9,8 @@ const logger = require('morgan');
 const routes = require('./routes');
 
 const User = require('./models/User');
-const CommentModel = require('./models/Comment');
+const Post = require('./models/Post');
+const Comment = require('./models/Comment');
 
 const PORT = process.env.PORT || 3000;
 
@@ -55,13 +56,35 @@ app.post('/user', (req, res) => {
 app.post('/comment', (req, res) => {
   const data = req.body;
 
-  const comment = new CommentModel({
-    author: data.author,
-    text: data.text,
+  const comment = new Comment({
+    message: data.message,
+    author: '5c725d1cee4fbc42d7fd981c',
+    post: '5c745166965def0de87a7bd8',
   });
 
-  comment.save().then(item => {
-    return res.status(200).send(item);
+  comment.save().then(comment => {
+    // Add comment to post
+    Post.findById('5c745166965def0de87a7bd8').exec((err, post) => {
+      post.comments.push(comment); // push comment to collection
+      post.save(); // save post
+    });
+
+    // Get post with comment and author
+    Post.findById('5c745166965def0de87a7bd8')
+      .populate({
+        path: 'comments',
+        model: 'Comment',
+         // nested population
+        populate: {
+          path: 'author',
+          model: 'User',
+        },
+      })
+      .exec((err, post) => {
+        console.log('[POST WITH COMMENTS]', post.comments[0].author.name);
+      });
+
+    return res.status(200).send(comment);
   });
 });
 
