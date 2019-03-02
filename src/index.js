@@ -8,9 +8,6 @@ const colors = require('colors');
 const logger = require('morgan');
 const routes = require('./routes');
 
-const User = require('./models/User');
-const CommentModel = require('./models/Comment');
-
 const PORT = process.env.PORT || 3000;
 
 mongoose
@@ -32,38 +29,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/api', routes);
-
-/**
- * NEW USER [POST]
- */
-app.post('/user', (req, res) => {
-  const data = req.body;
-
-  const user = new User({
-    name: data.name,
-    email: data.email,
-  });
-
-  user.save().then(item => {
-    return res.status(200).send(item);
-  });
-});
-
-/**
- * NEW COMMENT [POST]
- */
-app.post('/comment', (req, res) => {
-  const data = req.body;
-
-  const comment = new CommentModel({
-    author: data.author,
-    text: data.text,
-  });
-
-  comment.save().then(item => {
-    return res.status(200).send(item);
-  });
-});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(
