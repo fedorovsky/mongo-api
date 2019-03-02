@@ -1,7 +1,6 @@
 const User = require('../models/User');
 
 const create = async (req, res) => {
-  console.log('[NEW]');
   const data = req.body;
 
   const user = new User({
